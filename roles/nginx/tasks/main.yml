@@ -3,3 +3,7 @@
 - name: install nginx-full package
   apt: name=nginx-full state=latest
 
+- name: create strong DH parameters
+  shell: openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 4096
+  args:
+    creates: /etc/nginx/dhparam.pem
