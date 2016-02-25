@@ -1,3 +1,4 @@
+email: "me@something.tld"
 nginx_vhosts:
   - { name: "mydomain.example.com", upstream: "http://127.0.0.1:8888/" }
   - { name: "otherone.org", upstream: "http://10.0.5.12/" }

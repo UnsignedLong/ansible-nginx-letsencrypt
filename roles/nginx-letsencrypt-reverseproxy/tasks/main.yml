@@ -45,7 +45,7 @@
 - meta: flush_handlers
 
 - name: request SSL certs
-  shell: /root/.local/share/letsencrypt/bin/letsencrypt --renew-by-default -a webroot --webroot-path /var/www/le/ --server https://acme-v01.api.letsencrypt.org/directory --email pascal.schmiel@gmail.com --text --agree-tos -d {{ item.name }} auth
+  shell: /root/.local/share/letsencrypt/bin/letsencrypt --renew-by-default -a webroot --webroot-path /var/www/le/ --server https://acme-v01.api.letsencrypt.org/directory --email {{ email }} --text --agree-tos -d {{ item.name }} auth
   with_items: nginx_vhosts
 
 - name: configure SSL vhosts
