@@ -1,0 +1,5 @@
+nginx001 ansible_ssh_host=10.0.144.2
+
+[reverseproxy]
+nginx001
+

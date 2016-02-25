@@ -1,0 +1,56 @@
+---
+
+- name: create directories
+  file:
+    path={{ item }}
+    state=directory
+  with_items:
+    - /var/www/le
+    - /opt/letsencrypt
+    - /etc/nginx/global.d
+
+- name: install git package
+  apt: name=git state=latest
+
+- name: clone letsencrypt client
+  git:
+    repo=https://github.com/letsencrypt/letsencrypt.git
+    dest=/opt/letsencrypt
+
+- name: setup letsencrypt dependencies
+  shell: /opt/letsencrypt/letsencrypt-auto
+  ignore_errors: yes
+
+- name: add letsencrypt alias
+  copy:
+    src="letsencrypt.conf"
+    dest="/etc/nginx/global.d/letsencrypt.conf"
+    owner="root"
+    group="root"
+  notify: restart_nginx
+
+- name: remove default host
+  file:
+    path=/etc/nginx/sites-enabled/default
+    state=absent
+  notify: restart_nginx
+
+- name: configure vhosts
+  template:
+    src=vhost.conf.j2
+    dest=/etc/nginx/sites-enabled/{{ item.name }}.conf
+  with_items: nginx_vhosts
+  notify: restart_nginx
+
+- meta: flush_handlers
+
+- name: request SSL certs
+  shell: /root/.local/share/letsencrypt/bin/letsencrypt --renew-by-default -a webroot --webroot-path /var/www/le/ --server https://acme-v01.api.letsencrypt.org/directory --email pascal.schmiel@gmail.com --text --agree-tos -d {{ item.name }} auth
+  with_items: nginx_vhosts
+
+- name: configure SSL vhosts
+  template:
+    src=vhost_ssl.conf.j2
+    dest=/etc/nginx/sites-enabled/{{ item.name }}.ssl.conf
+  with_items: nginx_vhosts
+  notify: restart_nginx

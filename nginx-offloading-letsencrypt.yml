@@ -1,0 +1,7 @@
+---
+
+- hosts: reverseproxy
+  become: yes
+  roles:
+    - { role: nginx-letsencrypt-reverseproxy }
+
