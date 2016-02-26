@@ -19,7 +19,9 @@ server {
   ssl_session_tickets off;
   ssl_stapling on;
   ssl_stapling_verify on;
+  {% if item.disable_hsts is undefined %}
   add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+  {% endif %}
   add_header X-Frame-Options DENY;
   add_header X-Content-Type-Options nosniff;
 
@@ -28,6 +30,7 @@ server {
     proxy_pass "{{ item.upstream }}";
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 
