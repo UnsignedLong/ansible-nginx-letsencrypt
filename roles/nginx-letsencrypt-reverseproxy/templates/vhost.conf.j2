@@ -2,7 +2,7 @@ server {
   listen 80;
   listen [::]:80;
   
-  server_name "{{ item.name }}";
+  server_name "{{ item.name }}"{% if item.altnames is defined %}{% for name in item.altnames %} "{{ name }}"{% endfor %}{% endif %};
   
   include /etc/nginx/global.d/*.conf;
   
