@@ -17,3 +17,5 @@
 * HTTP/2 support
 * IPv6 support
 * SNI -> SSL certificates without messy AltName attributes
+* HSTS enabled by default
+* optional websocket support
