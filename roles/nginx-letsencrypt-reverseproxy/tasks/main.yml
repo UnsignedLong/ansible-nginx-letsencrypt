@@ -39,18 +39,18 @@
   template:
     src=vhost.conf.j2
     dest=/etc/nginx/sites-enabled/{{ item.name }}.conf
-  with_items: nginx_vhosts
+  with_items: '{{nginx_vhosts}}'
   notify: restart_nginx
 
 - meta: flush_handlers
 
 - name: (re)request SSL certs if cert does not exists or is about to expire
   shell: openssl x509 -checkend {{ ssl_expiry_threshold }} -noout -in /etc/letsencrypt/live/{{ item.name }}/cert.pem 2>/dev/null || /root/.local/share/letsencrypt/bin/letsencrypt --renew-by-default -a webroot --webroot-path /var/www/le/ --server https://acme-v01.api.letsencrypt.org/directory --email {{ email }} --text --agree-tos -d {{ item.name }}{% if item.altnames is defined %}{% for name in item.altnames %} -d {{ name }}{% endfor %}{% endif %} auth
-  with_items: nginx_vhosts
+  with_items: '{{nginx_vhosts}}'
 
 - name: configure SSL vhosts
   template:
     src=vhost_ssl.conf.j2
     dest=/etc/nginx/sites-enabled/{{ item.name }}.ssl.conf
-  with_items: nginx_vhosts
+  with_items: '{{nginx_vhosts}}'
   notify: restart_nginx
