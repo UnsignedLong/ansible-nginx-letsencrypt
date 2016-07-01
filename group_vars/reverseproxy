@@ -1,4 +1,4 @@
 email: "me@something.tld"
 nginx_vhosts:
-  - { name: "mydomain.example.com", upstream: "http://127.0.0.1:8888/" }
-  - { name: "otherone.org", altnames: [ "www.otherone.org", "otherone.com" ], upstream: "http://10.0.5.12/", disable_hsts: 1 }
+  - { name: "mydomain.example.com", upstream_port: 80, upstreams: [ "127.0.0.1:8888", "10.1.2.3:4567" ] }
+  - { name: "otherone.org", altnames: [ "www.otherone.org", "otherone.com" ], upstream_port: 80, upstreams: [ "10.0.5.12" ], hsts: 0 }
