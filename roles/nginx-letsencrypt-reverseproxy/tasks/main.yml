@@ -1,5 +1,21 @@
 ---
 
+- name: add backports repository
+  apt_repository: repo='deb http://httpredir.debian.org/debian jessie-backports main contrib non-free' state=present update_cache=yes
+
+- name: install packages from jessie-backports
+  apt: name="{{ item }}" state=present default_release=jessie-backports cache_valid_time=1200
+  with_items:
+    - nginx-full
+    - libssl1.0.0
+    - libssl-dev
+    - openssl
+
+- name: create strong DH parameters
+  shell: openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 4096
+  args:
+    creates: /etc/nginx/dhparam.pem
+
 - name: create directories
   file:
     path={{ item }}
@@ -19,7 +35,9 @@
 
 - name: setup letsencrypt dependencies
   shell: /opt/letsencrypt/letsencrypt-auto
-  ignore_errors: yes
+  register: le_auto
+  failed_when: "'know how to automatically configure the web server on this system' not in le_auto.stderr"
+  changed_when: false
 
 - name: add letsencrypt alias
   copy:
