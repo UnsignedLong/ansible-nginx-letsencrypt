@@ -34,7 +34,7 @@
     dest=/opt/letsencrypt
 
 - name: setup letsencrypt dependencies
-  shell: /opt/letsencrypt/letsencrypt-auto
+  shell: /opt/letsencrypt/letsencrypt-auto --os-packages-only
   register: le_auto
   failed_when: "'know how to automatically configure the web server on this system' not in le_auto.stderr"
   changed_when: false
