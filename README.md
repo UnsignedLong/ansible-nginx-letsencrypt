@@ -13,7 +13,7 @@
 * ansible-playbook -K -i inventory nginx-offloading-letsencrypt.yml
 
 # what you get
-* A+ rating on ssllabs.com
+* A+ rating on ssllabs.com (DNS record is mandatory: https://blog.qualys.com/ssllabs/2017/03/13/caa-mandated-by-cabrowser-forum )
 * HTTP/2 support
 * IPv6 support
 * SNI -> SSL certificates without messy AltName attributes
