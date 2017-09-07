@@ -1,7 +1,7 @@
 server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
-  
+
   server_name "{{ item.name }}"{% if item.altnames is defined %}{% for name in item.altnames %} "{{ name }}"{% endfor %}{% endif %};
 
   include /etc/nginx/global.d/*.conf;
@@ -24,6 +24,11 @@ server {
 {% endif %}
   add_header X-Frame-Options DENY;
   add_header X-Content-Type-Options nosniff;
+
+{% if item.client_max_body_size is defined %}
+  client_body_buffer_size {{ item.client_body_buffer_size | default('32K') }};
+  client_max_body_size {{ item.client_max_body_size}};
+{% endif %}
 
   location / {
     access_log off;
